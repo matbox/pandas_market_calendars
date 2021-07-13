@@ -281,7 +281,7 @@ class MarketCalendar(metaclass=MarketCalendarMeta):
         return result
 
     @staticmethod
-    def open_at_time(schedule, timestamp, include_close=False):
+    def open_at_time(schedule, datestamp, timestamp, include_close=False):
         """
         To determine if a given timestamp is during an open time for the market.
 
@@ -292,7 +292,7 @@ class MarketCalendar(metaclass=MarketCalendarMeta):
             if using bars and would like to include the last bar as a valid open date and time.
         :return: True if the timestamp is a valid open date and time, False if not
         """
-        date = pd.Timestamp(pd.Timestamp(timestamp).tz_convert('UTC').date())
+        date = pd.Timestamp(pd.Timestamp(datestamp).tz_convert('UTC').date())
         if date in schedule.index:
             if 'break_start' in schedule.columns:
                 if include_close:
@@ -315,7 +315,7 @@ class MarketCalendar(metaclass=MarketCalendarMeta):
         return pd.Timestamp.now(tz='UTC')
 
     @staticmethod
-    def is_open_now(schedule, include_close=False):
+    def is_open_now(schedule, datestamp, include_close=False):
         """
         To determine if the current local system time (converted to UTC) is an open time for the market
 
@@ -327,7 +327,7 @@ class MarketCalendar(metaclass=MarketCalendarMeta):
         :return: True if the current local system time is a valid open date and time, False if not
         """
         current_time = MarketCalendar._get_current_time()
-        return MarketCalendar.open_at_time(schedule, current_time)
+        return MarketCalendar.open_at_time(schedule, datestamp, current_time)
 
     def early_closes(self, schedule):
         """
